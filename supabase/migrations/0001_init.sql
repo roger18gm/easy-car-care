@@ -97,13 +97,73 @@ create policy "own tasks" on public.maintenance_tasks
 
 create policy "own logs" on public.maintenance_logs
   for all using (
-    exists (select 1 from public.vehicles v where v.id = vehicle_id and v.user_id = auth.uid())
+    exists (
+      select 1 from public.vehicles v
+      where v.id = vehicle_id and v.user_id = auth.uid()
+    )
+    and exists (
+      select 1 from public.maintenance_tasks t
+      where t.id = maintenance_task_id
+        and t.vehicle_id = maintenance_logs.vehicle_id
+        and exists (
+          select 1 from public.vehicles v
+          where v.id = t.vehicle_id and v.user_id = auth.uid()
+        )
+    )
   ) with check (
-    exists (select 1 from public.vehicles v where v.id = vehicle_id and v.user_id = auth.uid())
+    exists (
+      select 1 from public.vehicles v
+      where v.id = vehicle_id and v.user_id = auth.uid()
+    )
+    and exists (
+      select 1 from public.maintenance_tasks t
+      where t.id = maintenance_task_id
+        and t.vehicle_id = vehicle_id
+        and exists (
+          select 1 from public.vehicles v
+          where v.id = t.vehicle_id and v.user_id = auth.uid()
+        )
+    )
   );
 
 create policy "own notifications" on public.notifications
-  for all using (user_id = auth.uid()) with check (user_id = auth.uid());
+  for all using (
+    user_id = auth.uid()
+    and exists (
+      select 1 from public.vehicles v
+      where v.id = vehicle_id and v.user_id = auth.uid()
+    )
+    and (
+      maintenance_task_id is null
+      or exists (
+        select 1 from public.maintenance_tasks t
+        where t.id = maintenance_task_id
+          and t.vehicle_id = notifications.vehicle_id
+          and exists (
+            select 1 from public.vehicles v
+            where v.id = t.vehicle_id and v.user_id = auth.uid()
+          )
+      )
+    )
+  ) with check (
+    user_id = auth.uid()
+    and exists (
+      select 1 from public.vehicles v
+      where v.id = vehicle_id and v.user_id = auth.uid()
+    )
+    and (
+      maintenance_task_id is null
+      or exists (
+        select 1 from public.maintenance_tasks t
+        where t.id = maintenance_task_id
+          and t.vehicle_id = vehicle_id
+          and exists (
+            select 1 from public.vehicles v
+            where v.id = t.vehicle_id and v.user_id = auth.uid()
+          )
+      )
+    )
+  );
 
 insert into public.service_templates (name, description, default_interval_miles, default_interval_months) values
   ('Oil change', 'Fresh oil keeps the engine running smoothly. This is general guidance, not a manufacturer schedule.', 5000, 6),
