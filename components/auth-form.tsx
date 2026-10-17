@@ -33,7 +33,7 @@ function SubmitButton({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity disabled:opacity-60"
+      className="w-full rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60"
     >
       {pending ? "Please wait…" : label}
     </button>
@@ -78,7 +78,7 @@ export function AuthForm({
                 required
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? `${field.name}-error` : undefined}
-                className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+                className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:border-zinc-700 dark:bg-zinc-900"
               />
               {error && (
                 <p

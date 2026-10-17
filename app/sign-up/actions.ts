@@ -29,7 +29,11 @@ export async function signUp(
   }
 
   const supabase = await createServerClient();
-  const { data, error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { name } },
+  });
 
   if (error) {
     const message = error.message.toLowerCase();
@@ -50,11 +54,10 @@ export async function signUp(
     return { formMessage: "Check your email to confirm your account." };
   }
 
-  const { error: profileError } = await supabase.from("profiles").insert({
-    id: data.user!.id,
-    name,
-    email,
-  });
+  const { error: profileError } = await supabase.from("profiles").upsert(
+    { id: data.user!.id, name, email },
+    { onConflict: "id" },
+  );
 
   if (profileError) {
     return { formError: "Could not create your profile. Please try again." };

@@ -25,10 +25,41 @@ export async function signIn(
   }
 
   const supabase = await createServerClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) {
     return { formError: "Email or password is incorrect." };
+  }
+
+  const user = data.user;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (!profile) {
+      const profileEmail = (user.email ?? email).toLowerCase();
+      const name =
+        typeof user.user_metadata?.name === "string" &&
+        user.user_metadata.name.trim()
+          ? user.user_metadata.name.trim()
+          : profileEmail.split("@")[0];
+
+      const { error: profileError } = await supabase.from("profiles").insert({
+        id: user.id,
+        name,
+        email: profileEmail,
+      });
+
+      if (profileError) {
+        return { formError: "Could not load your profile. Please try again." };
+      }
+    }
   }
 
   redirect("/dashboard");
