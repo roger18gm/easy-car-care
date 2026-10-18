@@ -1,0 +1,54 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { DeleteVehicleForm } from "@/components/delete-vehicle-button";
+import { createServerClient } from "@/lib/supabase/server";
+
+const linkClassName =
+  "underline outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
+type VehicleDetailPageProps = {
+  params: Promise<{ vehicleId: string }>;
+};
+
+export default async function VehicleDetailPage({ params }: VehicleDetailPageProps) {
+  const { vehicleId } = await params;
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: vehicle } = await supabase
+    .from("vehicles")
+    .select("id, year, make, model, current_mileage, vin, purchase_date")
+    .eq("id", vehicleId)
+    .eq("user_id", user!.id)
+    .maybeSingle();
+
+  if (!vehicle) {
+    notFound();
+  }
+
+  const heading = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
+
+  return (
+    <div>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">{heading}</h1>
+          <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+            {vehicle.current_mileage.toLocaleString()} miles
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-4 text-sm">
+          <Link href={`/vehicles/${vehicle.id}`} className={linkClassName}>
+            Update mileage
+          </Link>
+          <Link href={`/vehicles/${vehicle.id}/edit`} className={linkClassName}>
+            Edit
+          </Link>
+          <DeleteVehicleForm vehicleId={vehicle.id} vehicleLabel={heading} />
+        </div>
+      </div>
+    </div>
+  );
+}
