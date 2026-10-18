@@ -1,9 +1,6 @@
-import { notFound } from "next/navigation";
-import {
-  VehicleForm,
-  valuesFromVehicle,
-  vehicleFormFields,
-} from "@/components/vehicle-form";
+import { notFound, redirect } from "next/navigation";
+import { VehicleForm, vehicleFormFields } from "@/components/vehicle-form";
+import { valuesFromVehicle } from "@/lib/vehicle-fields";
 import { createServerClient } from "@/lib/supabase/server";
 import { updateVehicle } from "../../actions";
 
@@ -18,11 +15,15 @@ export default async function EditVehiclePage({ params }: EditVehiclePageProps) 
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) {
+    redirect("/sign-in");
+  }
+
   const { data: vehicle } = await supabase
     .from("vehicles")
     .select("id, year, make, model, current_mileage, vin, purchase_date")
     .eq("id", vehicleId)
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .maybeSingle();
 
   if (!vehicle) {
