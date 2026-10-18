@@ -52,6 +52,9 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
           <Link href="#update-mileage" className={linkClassName}>
             Update mileage
           </Link>
+          <Link href={`/vehicles/${vehicle.id}/history`} className={linkClassName}>
+            History
+          </Link>
           <Link href={`/vehicles/${vehicle.id}/edit`} className={linkClassName}>
             Edit
           </Link>

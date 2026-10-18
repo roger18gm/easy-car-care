@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export type MaintenanceTaskItem = {
   id: string;
   name: string;
@@ -44,7 +46,11 @@ export function TaskList({ tasks }: TaskListProps) {
           <li key={task.id} className="py-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <h3 className="font-medium">{task.name}</h3>
+                <h3 className="font-medium">
+                  <Link href={`/tasks/${task.id}`} className="underline">
+                    {task.name}
+                  </Link>
+                </h3>
                 <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                   {task.description}
                 </p>
