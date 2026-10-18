@@ -29,7 +29,7 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
     notFound();
   }
 
-  const { data: tasks } = await supabase
+  const { data: tasks, error: tasksError } = await supabase
     .from("maintenance_tasks")
     .select("id, name, description, next_due_mileage, next_due_date, status")
     .eq("vehicle_id", vehicleId)
@@ -56,7 +56,24 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
           <DeleteVehicleForm vehicleId={vehicle.id} vehicleLabel={heading} />
         </div>
       </div>
-      <TaskList tasks={tasks ?? []} />
+      {tasksError ? (
+        <section className="mt-8">
+          <h2 className="text-lg font-semibold tracking-tight">Maintenance plan</h2>
+          <div
+            className="mt-4 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
+            role="alert"
+          >
+            <p>Could not load the maintenance plan. Please try again.</p>
+            <p className="mt-2">
+              <Link href={`/vehicles/${vehicle.id}`} className={linkClassName}>
+                Try again
+              </Link>
+            </p>
+          </div>
+        </section>
+      ) : (
+        <TaskList tasks={tasks ?? []} />
+      )}
     </div>
   );
 }
