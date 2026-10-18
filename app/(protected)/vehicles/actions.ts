@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import type { VehicleFormState } from "@/components/vehicle-form";
+import { addMonths } from "@/lib/dates";
+import { STARTER_TASKS } from "@/lib/starter-tasks";
 import { createServerClient } from "@/lib/supabase/server";
 import { parseVehicleForm } from "@/lib/validation";
 
@@ -61,6 +63,32 @@ export async function createVehicle(
     }
     return {
       formError: "Could not save the vehicle. Please try again.",
+      values: valuesFromFormData(formData),
+    };
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const currentMileage = parsed.value.currentMileage;
+  const taskRows = STARTER_TASKS.map((task) => ({
+    vehicle_id: data.id,
+    name: task.name,
+    description: task.description,
+    interval_miles: task.intervalMiles,
+    interval_months: task.intervalMonths,
+    is_custom: false,
+    status: "upcoming" as const,
+    next_due_mileage:
+      task.intervalMiles != null ? currentMileage + task.intervalMiles : null,
+    next_due_date:
+      task.intervalMonths != null ? addMonths(today, task.intervalMonths) : null,
+  }));
+
+  const { error: tasksError } = await supabase.from("maintenance_tasks").insert(taskRows);
+
+  if (tasksError) {
+    await supabase.from("vehicles").delete().eq("id", data.id).eq("user_id", userId);
+    return {
+      formError: "We could not create the maintenance plan. Please try again.",
       values: valuesFromFormData(formData),
     };
   }

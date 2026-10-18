@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteVehicleForm } from "@/components/delete-vehicle-button";
+import { TaskList } from "@/components/task-list";
 import { createServerClient } from "@/lib/supabase/server";
 
 const linkClassName =
@@ -28,6 +29,12 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
     notFound();
   }
 
+  const { data: tasks } = await supabase
+    .from("maintenance_tasks")
+    .select("id, name, description, next_due_mileage, next_due_date, status")
+    .eq("vehicle_id", vehicleId)
+    .order("name");
+
   const heading = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
 
   return (
@@ -49,6 +56,7 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
           <DeleteVehicleForm vehicleId={vehicle.id} vehicleLabel={heading} />
         </div>
       </div>
+      <TaskList tasks={tasks ?? []} />
     </div>
   );
 }
