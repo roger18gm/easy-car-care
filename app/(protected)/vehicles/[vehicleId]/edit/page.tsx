@@ -29,11 +29,7 @@ export default async function EditVehiclePage({ params }: EditVehiclePageProps) 
     notFound();
   }
 
-  const boundUpdate = updateVehicle.bind(
-    null,
-    vehicle.id,
-    vehicle.current_mileage,
-  );
+  const boundUpdate = updateVehicle.bind(null, vehicle.id);
 
   return (
     <VehicleForm

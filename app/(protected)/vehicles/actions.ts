@@ -71,16 +71,27 @@ export async function createVehicle(
 
 export async function updateVehicle(
   vehicleId: string,
-  previousMileage: number,
   _prevState: VehicleFormState,
   formData: FormData,
 ): Promise<VehicleFormState> {
-  const parsed = parseVehicleForm(formData, previousMileage);
+  const { supabase, userId } = await requireUserId();
+
+  const { data: existing } = await supabase
+    .from("vehicles")
+    .select("current_mileage")
+    .eq("id", vehicleId)
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (!existing) {
+    notFound();
+  }
+
+  const parsed = parseVehicleForm(formData, existing.current_mileage);
   if (!parsed.ok) {
     return { fieldErrors: parsed.errors, values: valuesFromFormData(formData) };
   }
 
-  const { supabase, userId } = await requireUserId();
   const { data, error } = await supabase
     .from("vehicles")
     .update({
