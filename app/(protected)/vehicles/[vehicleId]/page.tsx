@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteVehicleForm } from "@/components/delete-vehicle-button";
+import { MileageForm } from "@/components/mileage-form";
 import { TaskList } from "@/components/task-list";
 import { createServerClient } from "@/lib/supabase/server";
+import { updateMileage } from "./mileage-actions";
 
 const linkClassName =
   "underline outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -47,7 +49,7 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-4 text-sm">
-          <Link href={`/vehicles/${vehicle.id}`} className={linkClassName}>
+          <Link href="#update-mileage" className={linkClassName}>
             Update mileage
           </Link>
           <Link href={`/vehicles/${vehicle.id}/edit`} className={linkClassName}>
@@ -56,6 +58,11 @@ export default async function VehicleDetailPage({ params }: VehicleDetailPagePro
           <DeleteVehicleForm vehicleId={vehicle.id} vehicleLabel={heading} />
         </div>
       </div>
+      <MileageForm
+        vehicleId={vehicle.id}
+        currentMileage={vehicle.current_mileage}
+        action={updateMileage.bind(null, vehicle.id)}
+      />
       {tasksError ? (
         <section className="mt-8">
           <h2 className="text-lg font-semibold tracking-tight">Maintenance plan</h2>
