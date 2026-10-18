@@ -11,7 +11,7 @@ export default async function VehiclesPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: vehicles } = await supabase
+  const { data: vehicles, error } = await supabase
     .from("vehicles")
     .select("id, year, make, model, current_mileage")
     .eq("user_id", user!.id)
@@ -28,7 +28,19 @@ export default async function VehiclesPage() {
         </Link>
       </div>
 
-      {list.length === 0 ? (
+      {error ? (
+        <div
+          className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-800 dark:bg-red-950 dark:text-red-200"
+          role="alert"
+        >
+          <p>Could not load your vehicles. Please try again.</p>
+          <p className="mt-2">
+            <Link href="/vehicles" className={linkClassName}>
+              Try again
+            </Link>
+          </p>
+        </div>
+      ) : list.length === 0 ? (
         <p className="text-zinc-600 dark:text-zinc-400">
           No vehicles yet.{" "}
           <Link href="/vehicles/new" className={linkClassName}>
