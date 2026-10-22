@@ -11,3 +11,5 @@ Thumbs.db
 !.env*.example
 .next/
 node_modules/
+dist/
+.astro/
