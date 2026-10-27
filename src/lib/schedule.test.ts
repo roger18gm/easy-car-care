@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addMonths, dueSentences, dueTargets, selectScheduleLog, taskStatus } from './schedule'
+import { addMonths, dueSentences, dueTargets, healthLabel, localToday, recalculatedTaskFields, selectScheduleLog, statusLabel, taskStatus, utcCalendarDate } from './schedule'
 
 const today = '2026-10-22'
 
@@ -162,5 +162,64 @@ describe('dueSentences', () => {
     expect(dueSentences({ currentMileage: 10000, today, nextDueMileage: 9990, nextDueDate: '2026-11-22' })).toEqual([
       'About 10 miles overdue',
     ])
+  })
+})
+
+describe('screen helpers', () => {
+  it('formats the local calendar date', () => {
+    expect(localToday(new Date(2026, 9, 22, 15, 4))).toBe('2026-10-22')
+  })
+
+  it('reads the UTC calendar date from a timestamp', () => {
+    expect(utcCalendarDate('2026-10-22T23:30:00.000Z')).toBe('2026-10-22')
+  })
+
+  it('keeps a date-only value unchanged', () => {
+    expect(utcCalendarDate('2026-10-22')).toBe('2026-10-22')
+  })
+
+  it('labels stored statuses for the screen', () => {
+    expect(statusLabel('due')).toBe('Due soon')
+    expect(statusLabel('overdue')).toBe('Overdue')
+    expect(statusLabel('upcoming')).toBe('Upcoming')
+  })
+
+  it('uses the worst status for health', () => {
+    expect(healthLabel(['upcoming', 'due'])).toBe('Due soon')
+    expect(healthLabel(['due', 'overdue'])).toBe('Needs attention')
+    expect(healthLabel(['upcoming'])).toBe('Good shape')
+  })
+})
+
+describe('recalculatedTaskFields', () => {
+  it('uses the newest log as the next due base', () => {
+    expect(recalculatedTaskFields({
+      intervalMiles: 5000,
+      intervalMonths: 6,
+      currentMileage: 54200,
+      createdOn: '2026-01-01',
+      today: '2026-10-22',
+      logs: [
+        { completedDate: '2026-02-01', completedMileage: 49000, createdAt: '2026-02-02T00:00:00Z' },
+        { completedDate: '2026-08-01', completedMileage: 53700, createdAt: '2026-08-02T00:00:00Z' },
+      ],
+    })).toMatchObject({
+      nextDueMileage: 58700,
+      nextDueDate: '2027-02-01',
+    })
+  })
+
+  it('restores the no-log baseline from current mileage and the creation date', () => {
+    expect(recalculatedTaskFields({
+      intervalMiles: 5000,
+      intervalMonths: 6,
+      currentMileage: 54200,
+      createdOn: '2026-01-31',
+      today: '2026-10-22',
+      logs: [],
+    })).toMatchObject({
+      nextDueMileage: 59200,
+      nextDueDate: '2026-07-31',
+    })
   })
 })

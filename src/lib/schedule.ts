@@ -123,3 +123,62 @@ export function selectScheduleLog<T extends {
     return 0
   })[0]
 }
+
+export function localToday(now = new Date()): string {
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+export function utcCalendarDate(isoTimestamp: string): string {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(isoTimestamp)) return isoTimestamp
+  return new Date(isoTimestamp).toISOString().slice(0, 10)
+}
+
+export function statusLabel(status: TaskStatus): 'Upcoming' | 'Due soon' | 'Overdue' {
+  if (status === 'due') return 'Due soon'
+  if (status === 'overdue') return 'Overdue'
+  return 'Upcoming'
+}
+
+export function healthLabel(statuses: TaskStatus[]): 'Needs attention' | 'Due soon' | 'Good shape' {
+  if (statuses.includes('overdue')) return 'Needs attention'
+  if (statuses.includes('due')) return 'Due soon'
+  return 'Good shape'
+}
+
+export function groupByStatus<T extends { status: TaskStatus }>(tasks: T[]): {
+  overdue: T[]
+  due: T[]
+  upcoming: T[]
+} {
+  return {
+    overdue: tasks.filter((task) => task.status === 'overdue'),
+    due: tasks.filter((task) => task.status === 'due'),
+    upcoming: tasks.filter((task) => task.status === 'upcoming'),
+  }
+}
+
+export function recalculatedTaskFields(args: {
+  intervalMiles: number | null
+  intervalMonths: number | null
+  currentMileage: number
+  createdOn: string
+  today: string
+  logs: { completedDate: string; completedMileage: number; createdAt: string }[]
+}): { nextDueMileage: number | null; nextDueDate: string | null; status: TaskStatus } {
+  const log = selectScheduleLog(args.logs)
+  const targets = log
+    ? dueTargets(log.completedMileage, log.completedDate, args.intervalMiles, args.intervalMonths)
+    : dueTargets(args.currentMileage, args.createdOn, args.intervalMiles, args.intervalMonths)
+  return {
+    ...targets,
+    status: taskStatus({
+      currentMileage: args.currentMileage,
+      today: args.today,
+      nextDueMileage: targets.nextDueMileage,
+      nextDueDate: targets.nextDueDate,
+    }),
+  }
+}
