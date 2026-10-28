@@ -1,0 +1,10 @@
+---
+import AppLayout from '../../layouts/AppLayout.astro'
+import { AuthGate } from '../../components/AuthGate'
+import { LogFormIsland } from '../../components/LogFormIsland'
+const nextPath = Astro.url.pathname + Astro.url.search
+---
+<AppLayout>
+  <AuthGate client:load nextPath={nextPath} />
+  <LogFormIsland client:load />
+</AppLayout>
