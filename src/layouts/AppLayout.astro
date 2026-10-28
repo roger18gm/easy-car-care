@@ -1,0 +1,23 @@
+---
+import '../styles/global.css'
+import { AppNav } from '../components/AppNav'
+import { SignOutButton } from '../components/SignOutButton'
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EasyCarCare</title>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <a href="/dashboard">EasyCarCare</a>
+        <SignOutButton client:load />
+        <AppNav client:load />
+      </header>
+      <slot />
+    </div>
+  </body>
+</html>

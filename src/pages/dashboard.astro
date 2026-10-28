@@ -1,0 +1,8 @@
+---
+import AppLayout from '../layouts/AppLayout.astro'
+import { AuthGate } from '../components/AuthGate'
+---
+<AppLayout>
+  <AuthGate client:load nextPath="/dashboard" />
+  <p>Your dashboard will appear here.</p>
+</AppLayout>
