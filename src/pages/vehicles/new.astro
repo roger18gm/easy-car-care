@@ -1,0 +1,11 @@
+---
+import AppLayout from '../../layouts/AppLayout.astro'
+import { AuthGate } from '../../components/AuthGate'
+import { VehicleFormIsland } from '../../components/VehicleFormIsland'
+const nextPath = Astro.url.pathname + Astro.url.search
+---
+<AppLayout>
+  <h1>Add vehicle</h1>
+  <AuthGate client:load nextPath={nextPath} />
+  <VehicleFormIsland client:load mode="create" />
+</AppLayout>
