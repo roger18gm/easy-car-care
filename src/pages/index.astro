@@ -1,0 +1,9 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro'
+import { LandingActions } from '../components/LandingActions'
+---
+<PublicLayout>
+  <h1>EasyCarCare</h1>
+  <p>EasyCarCare shows the next useful maintenance step in plain language.</p>
+  <LandingActions client:load />
+</PublicLayout>
