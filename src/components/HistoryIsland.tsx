@@ -95,8 +95,9 @@ export function HistoryIsland() {
           <h2>{log.task_name}</h2>
           <p>{log.completed_date}</p>
           <p>{log.completed_mileage.toLocaleString('en-US')} miles</p>
+          <p>{log.notes}</p>
           <a href={`/tasks/log?id=${log.maintenance_task_id}&log=${log.id}`}>Edit</a>
-          <button type="button" onClick={() => void onDelete(log)}>Delete</button>
+          <button style={{marginLeft: "8px"}} type="button" onClick={() => void onDelete(log)}>Delete</button>
         </article>
       ))}
     </div>

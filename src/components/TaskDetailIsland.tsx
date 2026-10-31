@@ -54,7 +54,9 @@ export function TaskDetailIsland() {
   if (!ready) return null
   if (missing || !task) return <p>{COPY.unavailable} <a href="/vehicles">Back to vehicles</a></p>
   return (
-    <div class="stack">
+    <div class="stack" >
+      <div style={{backgroundColor: "white", borderRadius: "15px", paddingInline: "16px", marginTop: "16px"}}>
+
       <h1>{task.name}</h1>
       <p>{task.description}</p>
       <p class="status">{statusLabel(task.status)}</p>
@@ -72,6 +74,8 @@ export function TaskDetailIsland() {
           <p>{log.completed_mileage.toLocaleString('en-US')} miles</p>
         </article>
       ))}
+      </div>
+
     </div>
   )
 }

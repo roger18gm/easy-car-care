@@ -1,0 +1,216 @@
+.land {
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 420px at 100% -8%, #d7ebe0 0%, transparent 62%),
+    #f6f3ee;
+}
+
+.land-wrap {
+  width: min(68rem, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.land-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+}
+
+.land-mark {
+  color: inherit;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.land-hero {
+  display: grid;
+  gap: 2rem;
+  padding: 1.25rem 0 3.5rem;
+}
+
+.land-kicker {
+  margin: 0 0 0.75rem;
+  color: #1d4e39;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.land-hero h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.5rem, 6vw, 4.35rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.land-lede {
+  max-width: 36rem;
+  margin: 0 0 1.5rem;
+  font-size: 1.2rem;
+}
+
+.land .stack {
+  align-items: flex-start;
+}
+
+.land-preview {
+  background: #fff;
+  border: 1px solid #e7e1d8;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  box-shadow: 0 18px 50px rgb(28 25 23 / 8%);
+}
+
+.land-preview-car {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.land-preview-miles {
+  margin: 0.2rem 0 1rem;
+  color: #57534e;
+}
+
+.land-task {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding: 0.85rem 0.9rem;
+  background: #f6f3ee;
+  border-radius: 0.75rem;
+  border-left: 4px solid #1d4e39;
+}
+
+.land-task h2,
+.land-task p {
+  margin: 0;
+}
+
+.land-task h2 {
+  font-size: 1.05rem;
+}
+
+.land-task-soon {
+  border-left-color: #9a3412;
+}
+
+.land-section {
+  padding: 0 0 3.5rem;
+}
+
+.land-section h2,
+.land-close h2 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.land-section>p,
+.land-close p {
+  max-width: 40rem;
+  margin: 0 0 1.25rem;
+}
+
+.land-grid,
+.land-steps {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.land-grid h3,
+.land-steps h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+}
+
+.land-grid p,
+.land-steps p {
+  margin: 0;
+}
+
+.land-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+}
+
+.land-steps li {
+  counter-increment: step;
+  padding: 1rem 1rem 1rem 4.2rem;
+  background: #fff;
+  border: 1px solid #e7e1d8;
+  border-radius: 0.75rem;
+  position: relative;
+}
+
+.land-steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: #1d4e39;
+  color: #fff;
+  font-weight: 700;
+}
+
+.land-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.land-services li {
+  padding: 0.45rem 0.75rem;
+  background: #fff;
+  border: 1px solid #e7e1d8;
+  border-radius: 999px;
+}
+
+.land-close {
+  padding: 2rem 1.25rem;
+  background: #1d4e39;
+  color: #f6f3ee;
+}
+
+.land-close a {
+  color: #fff;
+}
+
+.land-close .button {
+  background: #fff;
+  color: #1d4e39;
+}
+
+.land-close :focus-visible {
+  outline-color: #fff;
+}
+
+@media (min-width: 768px) {
+  .land-hero {
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    padding-top: 2.5rem;
+  }
+
+  .land-grid,
+  .land-steps {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

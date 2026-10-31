@@ -1,9 +1,127 @@
 ---
-import PublicLayout from '../layouts/PublicLayout.astro'
-import { LandingActions } from '../components/LandingActions'
+import LandingLayout from "../layouts/LandingLayout.astro";
+import { LandingActions } from "../components/LandingActions";
 ---
-<PublicLayout>
-  <h1>EasyCarCare</h1>
-  <p>EasyCarCare shows the next useful maintenance step in plain language.</p>
-  <LandingActions client:load />
-</PublicLayout>
+
+<LandingLayout>
+  <div class="land">
+    <header class="land-wrap land-bar">
+      <a class="land-mark" href="/">EasyCarCare</a>
+      <LandingActions client:load variant="bar" />
+    </header>
+
+    <main>
+      <section class="land-wrap land-hero">
+        <div>
+          <p class="land-kicker">For everyday drivers</p>
+          <h1>Know the next useful thing your car needs.</h1>
+          <p class="land-lede">
+            EasyCarCare turns a vehicle and its mileage into a plain-language
+            plan. No shop jargon, and no guessing whether the oil change was
+            last spring or last year.
+          </p>
+          <LandingActions client:load />
+        </div>
+        <aside class="land-preview" aria-label="Example of a maintenance plan">
+          <p class="land-kicker">A plan, in plain language</p>
+          <p class="land-preview-car">2018 Honda Civic</p>
+          <p class="land-preview-miles">54,200 miles</p>
+          <article class="land-task land-task-soon">
+            <div>
+              <h2>Oil change</h2>
+              <p>Due in about 500 miles</p>
+            </div>
+            <p class="status">Due soon</p>
+          </article>
+          <article class="land-task">
+            <div>
+              <h2>Tire rotation</h2>
+              <p>Due in about 3,800 miles</p>
+            </div>
+            <p class="status">Upcoming</p>
+          </article>
+        </aside>
+      </section>
+
+      <section class="land-wrap land-section">
+        <h2>Plain answers, not a repair manual</h2>
+        <p>
+          Add a car. EasyCarCare tells you what matters next, then keeps the
+          record when the work is done.
+        </p>
+        <div class="land-grid">
+          <article class="card">
+            <h3>The next useful step</h3>
+            <p>
+              Overdue, due soon, and upcoming stay in sentences a driver can act
+              on.
+            </p>
+          </article>
+          <article class="card">
+            <h3>A plan that starts itself</h3>
+            <p>
+              A new vehicle gets a starter schedule from its mileage. You do not
+              have to look up intervals first.
+            </p>
+          </article>
+          <article class="card">
+            <h3>A record you can trust</h3>
+            <p>
+              Log the date, mileage, and an optional cost. The next due point
+              moves forward with the work.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="land-wrap land-section">
+        <h2>Three steps, then you can see the plan</h2>
+        <ol class="land-steps">
+          <li>
+            <h3>Create an account</h3>
+            <p>Your vehicles and service history stay private to you.</p>
+          </li>
+          <li>
+            <h3>Add the car and its mileage</h3>
+            <p>Year, make, model, and the odometer. A VIN is optional.</p>
+          </li>
+          <li>
+            <h3>Follow the next step</h3>
+            <p>
+              Update the mileage as you drive, and log the service when it is
+              finished.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="land-wrap land-section">
+        <h2>A starter plan, already written</h2>
+        <p>
+          New vehicles begin with ordinary care. It is general guidance, not a
+          manufacturer schedule.
+        </p>
+        <ul class="land-services">
+          <li>Oil change</li>
+          <li>Tire rotation</li>
+          <li>Tire-pressure check</li>
+          <li>Air-filter replacement</li>
+          <li>Brake inspection</li>
+          <li>Battery check</li>
+          <li>Coolant inspection</li>
+        </ul>
+      </section>
+
+      <section class="land-close">
+        <div class="land-wrap">
+          <h2>Add a vehicle. See what it needs next.</h2>
+          <p>
+            The same plan works on a phone in the driveway and on a desktop at
+            the kitchen table.
+          </p>
+          <LandingActions client:load />
+        </div>
+      </section>
+    </main>
+  </div>
+</LandingLayout>
